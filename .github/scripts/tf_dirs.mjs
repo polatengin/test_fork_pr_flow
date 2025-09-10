@@ -24,8 +24,7 @@ export default async ({ context, core }) => {
     // Split changes by comma and clean up each item
     const items = changes
       .split(',')
-      .map((item) => item.trim())
-      .map((item) => item.replace(/^["']|["']$/g, '')) // Remove surrounding quotes (single or double)
+      .map((item) => item.trim().replace(/^["']|["']$/g, '')) // clean
       .filter((item) => item.length > 0)
 
     if (items.length === 0) {
@@ -62,30 +61,25 @@ export default async ({ context, core }) => {
 
     items.forEach((item) => {
       try {
-        let dirPath
+        let dirPath = useDirs ? item : path.dirname(item)
 
-        if (useDirs) {
-          // Input is already directories, use as-is
-          dirPath = item
-        } else {
-          // Input is files, extract directory part
-          dirPath = path.dirname(item)
+        // normalize — if somehow a .tf file sneaks through, take its dirname
+        if (dirPath.endsWith('.tf')) {
+          dirPath = path.dirname(dirPath)
         }
 
-        // validate that a file exists at dirPath
-        if (!fs.existsSync(path.resolve(dirPath))) {
-          throw new Error(`File does not exist: ${dirPath}`)
-        }
-
-        // If path contains "tests", truncate at that point
+        // cut off at /tests
         if (!useDirs && dirPath.includes('/tests')) {
-          // Extract everything before "/tests"
-          const testsIndex = dirPath.indexOf('/tests')
-          dirPath = dirPath.substring(0, testsIndex)
+          dirPath = dirPath.substring(0, dirPath.indexOf('/tests'))
         }
 
-        // Validate and normalize the path, but exclude module paths from final output
-        if (dirPath && dirPath !== '.' && dirPath.length > 0 && !dirPath.includes('modules')) {
+        const absPath = path.resolve(dirPath)
+        if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) {
+          core.warning(`Skipping non-directory path: ${dirPath}`)
+          return
+        }
+
+        if (dirPath && dirPath !== '.' && !dirPath.includes('modules')) {
           dirPaths.add(dirPath)
         }
       } catch (error) {
