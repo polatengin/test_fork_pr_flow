@@ -104,8 +104,6 @@ async function handleIssueComment({ context, github }) {
       '',
       '**Important:** If new commits are pushed, tests will need to be re-approved.',
       '',
-      '🚀 Tests will run on the next PR update or when manually triggered.',
-      '',
       `<!-- APPROVAL_MARKER:${pr.data.head.sha} -->`
     ].join('\n')
   });
