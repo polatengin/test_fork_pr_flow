@@ -109,6 +109,8 @@ async function handleIssueComment({ context, github }) {
       `<!-- APPROVAL_MARKER:${pr.data.head.sha} -->`
     ].join('\n')
   });
+
+  return true;
 }
 
 export default async function checkForkAndApproval({ context, github, core }) {
@@ -129,3 +131,4 @@ export default async function checkForkAndApproval({ context, github, core }) {
 
   core.setOutput('should_run', should_run.toString());
 }
+
