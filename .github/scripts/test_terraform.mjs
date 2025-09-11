@@ -44,6 +44,10 @@ async function handleIssueComment({ context, github }) {
   if (!context.payload.issue.pull_request) return false;
   if (!context.payload.comment.body.includes('/allow')) return false;
 
+  const sleepDuration = Math.random() * 5000;
+  console.log(`Sleeping for ${Math.round(sleepDuration)}ms to simulate processing delay...`);
+  await new Promise(resolve => setTimeout(resolve, sleepDuration));
+
   /*
   Possible `author_association` values;
     "OWNER" – repository owner
