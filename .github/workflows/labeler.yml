@@ -12,10 +12,10 @@ jobs:
 
   main:
     runs-on: ubuntu-24.04
+    needs: check-should-run
+    if: needs.check-should-run.outputs.should_run == 'true'
     steps:
       - name: Run Labeler
         uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
-        needs: check-should-run
-        if: needs.check-should-run.outputs.should_run == 'true'
         with:
           sync-labels: true
