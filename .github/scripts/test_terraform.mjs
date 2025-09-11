@@ -42,7 +42,7 @@ async function handlePullRequest({ context, github }) {
 
 async function handleIssueComment({ context, github }) {
   if (!context.payload.issue.pull_request) return false;
-  if (!context.payload.comment.body.includes('/run_tests')) return false;
+  if (!context.payload.comment.body.includes('/allow')) return false;
 
   /*
   Possible `author_association` values;
