@@ -15,7 +15,7 @@ jobs:
   main:
     runs-on: ubuntu-24.04
     needs: check-should-run
-    if: needs.check-should-run.outputs.should_run
+    if: needs.check-should-run.outputs.should_run == 'true'
     steps:
       - run: |
           echo "should run : ${{ needs.check-should-run.outputs.should_run }}"
