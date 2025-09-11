@@ -10,6 +10,8 @@ async function handlePullRequest({ context, github }) {
   const pr = context.payload.pull_request;
   const isFork = pr.head.repo.full_name !== pr.base.repo.full_name;
 
+  console.log("handlePullRequest triggered");
+
   console.log(`PR #${pr.number}: ${pr.head.repo.full_name} -> ${pr.base.repo.full_name} <---> Is fork: ${isFork}, SHA: ${pr.head.sha}`);
 
   if (!isFork) {
@@ -23,11 +25,19 @@ async function handlePullRequest({ context, github }) {
     issue_number: pr.number
   });
 
-  return comments.data.find(comment => {
+  console.log("Comments:")
+  console.log(JSON.stringify(comments));
+
+  const isCommentFound = comments.data.find(comment => {
     const hasApprovalMarker = comment.body.includes(`APPROVAL_MARKER:${pr.head.sha}`);
     const isMaintainer = checkIsMaintainer(comment);
     return hasApprovalMarker && isMaintainer;
   });
+
+  console.log("Comment:")
+  console.log(isCommentFound);
+
+  return isCommentFound;
 }
 
 async function handleIssueComment({ context, github }) {
@@ -104,6 +114,7 @@ async function handleIssueComment({ context, github }) {
 export default async function checkForkAndApproval({ context, github, core }) {
   let should_run = false;
 
+  console.log("event: " + context.eventName);
   if (context.eventName === 'schedule' || context.eventName === 'workflow_dispatch') {
     should_run = true;
   }
