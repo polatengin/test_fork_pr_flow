@@ -48,6 +48,7 @@ jobs:
   changes:
     name: Changes
     needs: check-should-run
+    if: needs.check-should-run.outputs.should_run == 'true'
     runs-on: ubuntu-24.04
     outputs:
       src: ${{ steps.dirs.outputs.changes }}
@@ -81,6 +82,7 @@ jobs:
           INPUT_SRC_CORE: src
 
   test:
+    if: needs.check-should-run.outputs.should_run == 'true' && needs.changes.outputs.src != '[]' && needs.changes.outputs.src != ''
     needs: [check-should-run, changes]
     runs-on: ubuntu-24.04
     timeout-minutes: 120
@@ -318,4 +320,3 @@ jobs:
 
       - name: ✅ Success
         run: exit 0
-
