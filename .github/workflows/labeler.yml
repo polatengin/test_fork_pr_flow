@@ -17,9 +17,7 @@ jobs:
     needs: check-should-run
     if: needs.check-should-run.outputs.should_run == 'true'
     steps:
-      - run: |
-          echo "should run : ${{ needs.check-should-run.outputs.should_run }}"
-      # - name: Run Labeler
-      #   uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
-      #   with:
-      #     sync-labels: true
+      - name: Run Labeler
+        uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
+        with:
+          sync-labels: true
