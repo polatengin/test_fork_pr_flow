@@ -28,16 +28,16 @@ async function handlePullRequest({ context, github }) {
   console.log("Comments:")
   console.log(JSON.stringify(comments));
 
-  const isCommentFound = comments.data.find(comment => {
+  const comment = comments.data.find(comment => {
     const hasApprovalMarker = comment.body.includes(`APPROVAL_MARKER:${pr.head.sha}`);
     const isMaintainer = checkIsMaintainer(comment);
     return hasApprovalMarker && isMaintainer;
   });
 
   console.log("Comment:")
-  console.log(isCommentFound);
+  console.log(comment);
 
-  return isCommentFound;
+  return comment != null;
 }
 
 async function handleIssueComment({ context, github }) {
