@@ -44,7 +44,7 @@ async function handleIssueComment({ context, github }) {
   if (!context.payload.issue.pull_request) return false;
   if (!context.payload.comment.body.includes('/allow')) return false;
 
-  const sleepDuration = Math.random() * 5000;
+  const sleepDuration = (parseInt(process.env.GITHUB_RUN_ID.slice(-2)) % 10) * 1000;
   console.log(`Sleeping for ${Math.round(sleepDuration)}ms to simulate processing delay...`);
   await new Promise(resolve => setTimeout(resolve, sleepDuration));
 
