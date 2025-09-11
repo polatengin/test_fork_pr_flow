@@ -129,6 +129,7 @@ export default async function checkForkAndApproval({ context, github, core }) {
     should_run = await handleIssueComment({ context, github, core });
   }
 
+  console.log(`Should run tests: ${should_run ? '✅ Yes' : '❌ No'}`);
+
   core.setOutput('should_run', should_run.toString());
 }
-
