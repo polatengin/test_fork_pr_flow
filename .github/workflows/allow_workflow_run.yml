@@ -4,7 +4,7 @@ on:
     outputs:
       should_run:
         description: "Whether the workflow should run"
-        value: ${{ jobs.check.outputs.should_run }}
+        value: ${{ jobs.check-should-run.outputs.should_run }}
 
 permissions:
   contents: read
